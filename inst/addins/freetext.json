@@ -1,0 +1,38 @@
+{
+  "show_freetext": {
+    "name": "show_freetext",
+    "package": "gtree",
+    "category": "Communication",
+    "help": "Show a freetext that has been entered before.",
+    "fields": [
+      {
+        "name": "name",
+        "type": "character",
+        "help": "Identifier of the freetext that shall be shown."
+      }
+    ]
+  },
+  "freetext": {
+    "name": "freetext",
+    "package": "gtree",
+    "category": "Communication",
+    "help": "A player can enter a free text that can be shown to other players in later stages. To show the text, simply add it in a stage page of another stage. It won't be used in the game theoretic analysis.",
+    "fields": [
+      {
+        "name": "name",
+        "type": "character",
+        "help": "Specify a unique variable name."
+      },
+      {
+        "name": "maxLength",
+        "type": "integer",
+        "help": "Optionally, a maximum number of characters the user is allowed to enter"
+      },
+      {
+        "name": "minLength",
+        "type": "integer",
+        "help": "Optionally, a minimum number of characters the user is required to enter."
+      }
+    ]
+  }
+}

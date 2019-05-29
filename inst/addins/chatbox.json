@@ -1,0 +1,39 @@
+{
+  "chatbox": {
+    "name": "chatbox",
+    "package": "gtree",
+    "category": "Communication",
+    "help": "A chatbox that allows free communication among all players or a subset of players in a stage.",
+    "fields": [
+      {
+        "name": "name",
+        "type": "character",
+        "help": "Specify a unique identifier for the chatbox."
+      },
+      {
+        "name": "players",
+        "type": "integer",
+        "multiple": true,
+        "help": "Specify all player numbers that can participate in the chat. This can only be players of the game not arbitrary subjects of the experiments."
+      },
+      {
+        "name": "timer",
+        "type": "integer",
+        "help": "You can enter a maximum number of seconds that the chat is working. The timer starts once the stage with the chat is shown to the first player that participates in the chat. If the timer field is empty there is no time restriction for the chat. In general, it seems a good idea to add a timer to the chat or the stage to ensure that an experiment moves forward."
+      },
+      {
+        "name": "identifiers",
+        "type": "character",
+        "multiple": true,
+        "help": "Specify a set of identifiers for each chat participant. If empty, just use player number."
+      },
+      {
+        "name": "identifierMode",
+        "type": "character",
+        "set": ["fixed","match_random","exp_random"],
+        "help": "Shall the identifiers be fixed, sampled randomly each match or drawn once for the experiment but then stay fixed?"
+      }
+
+    ]
+  }
+}

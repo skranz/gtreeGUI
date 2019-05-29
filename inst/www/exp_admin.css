@@ -1,0 +1,15 @@
+.es-info-table {
+  padding-left: 5px;
+}
+
+.es-part-info-table {
+  padding-left: 20px;
+  margin-left: 5em;
+}
+
+
+.es-info-table td, .es-part-info-table td {
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 3px;
+}

@@ -1,0 +1,110 @@
+# preference classes
+payoff:
+	descr: 'Risk-neutral payoff maximizer.'
+	defaultName: payoff
+	params:
+	fun: payoffUtil
+
+ineqAv:
+	descr: >
+	  Inequality aversion as in Fehr and Schmidt (1999).<br>
+	  If \(x_i\) is the monetary payoff of player i, her utility
+	  is computed as follows:
+	  \[u_i = x_i
+	    - \frac \alpha {n-1} \sum_{j \ne i}\max(x_j-x_i,0)
+	    - \frac \beta {n-1} \sum_{j \ne i}\max(x_i-x_j,0)
+	   \]
+	  where \(n\) is the number of players,
+	  \(\alpha\) is the envy parameter and \(\beta\) the guilt parameter.
+	  <br>Note that round values for alpha and beta,
+	  like <code>alpha=1</code> and <code>beta=0.5</code> can yield
+	  a large number of multiple equilibria in certain games,
+	  while the multiplicity vanishes for close-by parameter values like
+	  <code>alpha=0.99</code> or <code>alpha=1.01</code>.
+	defaultName: 'ineq_99_49'
+	params:
+		alpha:
+			descr: 'the degree of envy'
+			default: 0.99
+		beta:
+			descr: 'the degree of guilt'
+			default: 0.49
+	fun: ineqAvUtil
+
+lossAv:
+	descr: >
+	  Loss aversion with a reference point \(r_i\) for each player i.<br>
+	  If \(x_i\) is the monetary payoff of player i, her utility is given by
+	  the following simple linear specification of loss aversion:
+
+	  \[u_i = \max(x_i-r_i,0) - \lambda \max(r_i-x_i,0)\]
+
+	  <br>The parameter \(\lambda\) measures the degree of loss aversion.
+	  It is typically assumed that \(\lambda > 1\), i.e. losses loom
+	  larger than gains. A common choice is \(\lambda = 2\).
+	  <br>The reference point can be a formula and thereby depend
+	  on the game. The example below choses the reference point for
+	  each player i, as the mean of her lowest and
+	  highest possible payoffs in the game.
+	  <br>
+	  Note that unlike the classic macroeconomic notion that people are risk-averse over
+	  their expected life-time income, loss aversion means that subjects narrowly
+	  consider only the risk of losses and gains in the current experiment.
+	  See Mathew Rabin's article
+	  "Risk Aversion and Expected-Utility Theory: A Calibration Theorem." (Econometrica, 2000)
+	  for an exposition why behavior towards risk in small stake economic experiments,
+	  is only consistent with such narrow bracketing.
+	defaultName: 'lossAvCenter'
+	params:
+		r:
+			descr: 'Reference point, can be a formula'
+			default: '(min(payoff_i)+max(payoff_i))/2'
+		lambda:
+			descr: degree of loss aversion
+			default: 2
+	fun: lossAvUtil
+
+unifLossAv:
+	descr: >
+	  This is an alternative formulation of loss aversion,
+		with a continuum of reference points
+		that are uniformely distributed between <code>rmin</code> and <code>rmax</code>.
+		<br>Between <code>rmin</code> and <code>rmax</code>, the resulting utility function is quadratic
+		function that starts with slope <code>lambda</code> at <code>rmin</code>
+		and flattens to slope <code>1</code> at <code>rmax</code>. For payoffs
+		below <code>rmin</code> or above <code>rmax</code> the utility function is
+		linear with slope <code>lambda</code> and <code>1</code>, respectively,
+		like in the loss and gain domains for a single reference point.
+		<br>This formulation of loss aversion thus allows for evaluationg narrowly
+		losses and gains taking into account only the payoffs of the game.
+		Yet, it avoids a kink at some fixed reference point, but resembles a
+		quadratic formulation of risk aversion instead.
+	defaultName: 'unifLossAv_min_max'
+	params:
+		rmin:
+			descr: the lowest reference point
+			default: 'min(payoff_i)'
+		rmax:
+			descr: the highest reference point
+			default: 'max(payoff_i)'
+		lambda:
+			descr: degree of loss aversion
+			default: 2
+	fun: unifLossAvUtil
+
+OwnSumMin:
+	descr: >
+	  Players maximize a weighted sum of their own payoff,
+	  the total payoff of all players, and the minimal payoff among all players.
+	defaultName: 'OwnSumMin_111'
+	params:
+		own_weight:
+			descr: 'weight on own payoff'
+			default: 1
+		sum_weight:
+			descr: 'weight total payoff'
+			default: 1
+		min_weight:
+			descr: 'weight on minimal payoff'
+			default: 1
+	fun: OwnSumMin

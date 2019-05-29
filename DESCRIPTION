@@ -1,0 +1,26 @@
+Package: gtreeGUI
+Type: Package
+Title: Game Theoretic Representation of Economic Experiments: GUI
+Version: 0.0.1
+Date: 2017-04-27
+Author: Sebastian Kranz
+Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.de>
+Description:
+  Toolbox and shiny based GUI to create economic experiments.
+  Experiments can be run and if applicable game theoretically
+  analysed.
+  For the game theoretic analysis the experiment is
+  exported to a game tree in Gambit efg format and the gambit
+  solvers are used to compute equilibria.
+  (see http://www.gambit-project.org/)
+License: GPL >= 2.0
+Depends:
+  gtreeCore,
+  restorepoint,stringtools, yaml,
+  data.table,dplyr, dplyrExtras, 
+  shiny, shinyAce, shinyBS,
+  shinyEvents, shinyEventsUI, codeUtils, tidyr, digest,
+  markdown, rmdtools, sys, lubridate
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

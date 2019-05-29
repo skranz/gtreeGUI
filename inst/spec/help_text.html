@@ -1,0 +1,73 @@
+#. main
+<h4>Getting started with gtree</h4>
+<ul>
+<li>
+On the left of the page you, see a list of all existing games. Click on a game to open it.
+</li>
+<li>
+Right-click on a game or the "Games" folder in the left panel to create a new game. You can also delete, rename, or duplicate an existing game by right clicking on it.
+</li>
+<li>
+The button "Preferences" allows you to edit or specify outcome based preferences, like inequality aversion or loss aversion with specific parameters that you can use when solving for equilibria.
+</li>
+<!--
+<li>
+The button "Jobs" shows you the status of background jobs that compute equilibria.
+</li>
+-->
+</ul>
+
+#. game
+
+<h4>Game</h4>
+In the center pane you see a game specification.
+<h5>Buttons</h5>
+<ul><li>
+You can save your changes by pressing the "Save" button.
+</li>
+<li>
+Use the "Check" button for a first check whether your specification contains no errors and can be parsed as a valid game tree.
+</li>
+<li>
+The "Equilibria" button allows you to compute game theoretic equilibria for your game.
+</li>
+<li>
+The button "Run" allows you to perform a test run of the game as a web-based experiment.
+</li>
+</ul>
+<h5>Game elements</h5>
+Below the buttons you see a tree of the different elements of the game. You can press on a node to open it and see additional help.
+
+#. eq
+<h4>Compute equilibria</h4>
+Here you can compute game theoretic equilibria of your game.
+<h5>Settings</h5>
+<ul>
+<li><b>Variants:</b> Choose the variant(s) of your game for which you want to compute equilibria.</li>
+<li><b>Preferences:</b> You can also solve equilibria under the assumption that subjects have different preferences than risk-neutral payoff maximization, e.g. inequality aversion, loss aversion or risk-aversion. You can select here some pre-specified preferences. To create custom preferences, you can click the button "Preferences" at the top of the left panel.</li>
+<li><b>Solver: </b>The solver specifies which type of equilibria you want to solve for: pure vs mixed; only subgame perfect vs all Nash equilibria and which solver to use. Mostly, you can pick a <a href="http://gambitproject.readthedocs.io/en/latest/tools.html#" target="_blank">Gambit solver</a>. For pure strategy subgame perfect equilibria, there is also an internal R-based solver. That solver can be useful, since for some moderately sized games the Gambit solver is fairly slow or gets stuck.</li>
+<li><b>Branching Limit and Strategy Profiles Limit: </b>
+If you have a large action space or several stages, the size of the extensive form game tree can explode. Even if the number of nodes of the game tree is not very large, there can be a large number of behavioral strategy profiles.<br>
+Both issues may cause you to run out of memory or making the analysis take forever. The variable branching limit limits the maximum size of the game tree (the analysis stops if the tree grows beyond the branching limit and there are still nodes below). If the number of strategy profiles exceeds the limit, we will not try to solve for equilibria.</li>
+</ul>
+<h5>Gametree</h5>
+Pressing the "Gametree" button, computes the extensive form of the game. You are then shown information about the number of nodes, information set and the number of strategy profiles. In the subfolder "gambit" of the directory of your game an .efg file in Gambit's extensive form game format is created that describes the game. You could manually load the file with Gambit and solve the game.
+<h5>Solving for equilibria</h5>
+The "Solve" button solves the equilibria using Gambit and shows the following results:
+<ul>
+<li><b>Expected equilibrium outcomes: </b>
+This table shows the expected equilibrium outcomes with expectations taken over moves of nature and mixed strategies. The table has one row for each equilibrium.</li>
+<li><b>Equilibrium outcomes: </b>
+Here we show every possible outcome that can occur form some realiziation of moves of nature and mixed strategies. This means each equilibrium can correspond to multiple rows. If there are no random moves of nature and pure strategies only, the table is the same as expected equilibrium outcomes.</li>
+<li><b>Conditional equilibrium outcomes: </b>
+The main goal of this section is to study continuation equilibria if we fix some action. For example, in an ultimatum game, we could look at the continuation equilibria if we fix some offer.<br>We could also fix the responders decision, say to "reject". It is then assumed that the proposer does not know that the responder will choose reject. Formally, fixing an action is an unexpected tremble.</li>
+</ul>
+For a more detailed analysis of equilibria, you can perform an analysis directly in R, as explained in the gtree documentation.
+
+#. prefs
+<h4>Preferences</h4>
+Here you can specify different outcome-based preferences. You can then solve for equilibria assuming that all player have one of those preferences.
+<h5>Preference classes</h5>
+In this graphical interface, a small set of preference classes in implemented. The panel on top gives you information about these preference classes with examples. To use custom preference classes, you have to use gtree via R code.
+<h5>Specified Preferences</h5>
+Below you find a text field that specifies actually usable preferences as a yaml file. Each preference must have a unique name, specify a class, and specify values for the parameters of this class of preferences. Best copy and modify the example, from the preference class tab to add a new preference in this yaml file. After you save your preferences, newly added preferences should be available when you solve for equilibria. You have to close and reopen the window for equilibrium computation, however.

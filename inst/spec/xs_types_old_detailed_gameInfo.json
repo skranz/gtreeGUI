@@ -1,0 +1,279 @@
+{
+  "game": {
+    "expanded": true,
+    "fields": [
+      {
+        "name": "gameId",
+        "readonly": true,
+        "help": "A unique identifier for the game."
+      },
+      {
+        "name": "gameInfo",
+        "help": "Information like article and authors. Not yet fully specified."
+      },
+      {
+        "name": "varpar",
+        "title": "Variants and Parameters",
+        "special": true,
+        "help_type": "varpar"
+      },
+      {
+        "name": "stages",
+        "isList": true,
+        "expanded": true,
+        "childType": "stage",
+        "help": "Every experiment consists of one or several stages. Right-click to add a stage. Click on a stage for more detailed help."
+      }
+    ]
+  },
+  "stage": {
+    "expanded": false,
+    "help": "Each experiment consists of at least one stage. Click on the different fields for an explanation. Right click to add a new stage or to delete or duplicate the current stage.<br><br>The appearance of a stage can be customized by a 'page' for the stage. A convenient way to quickly design pages is to run the experiment, and then press 'Edit Page' to customize the appearance of the current stage.",
+    "fields": [
+      {
+        "name": "name",
+        "type": "character",
+        "help": "Specify a unique name for the stage."
+      },
+      {
+        "name": "descr",
+        "type": "character",
+        "inputType": "textArea",
+        "help": "Here you can add an optional description of the stage. It is only used for documentation purposes."
+      },
+      {
+        "name": "player",
+        "type": "integer",
+        "min": 1,
+        "help": "Specify the players to which the stage is shown.<h4>Specifying the players.</h4>There are different ways to enter new players.<ul><li>If you leave the player field empty, the stage is shown to no player. Move of natures and other computations are performed, if the condition field of the stage evaluates to TRUE.</li><li>You can enter just a single number. E.g. '1', for player 1.</li><li>You can enter a list in YAML format. E.g. '[1,3]' for players 1 and 3.</li><li>You can enter an R formula preceeded by an '=' sign. E.g. '=1:3' for players 1,2 and 3.</li><li>An R formula can also reference to earlier specified parameters or variables. E.g. if nature draws the idendity of a proposer and stores the player number in an integer variable, 'proposer', we would set the player field in the proposer stage to '=proposer' for  YAML format that can take actions at this stage.</li></ul><h4>Action stages require a single player</h4>A stage that specifies actions must specify a single player only. If you want to build a game in which multiple players choose symmetric actions, e.g. a public good game. You must specify a separate stage for each player. We know that this is a bit inconvenient. Note, however, that stage pages can be easily duplicated and stage pages can be easily copied. We may include the possibility of multi-player stages with symmetric actions in a future version of gtree."
+      },
+      {
+        "name": "condition",
+        "type": "condition",
+        "inputType": "textArea",
+        "help": "A condition is an R formula that returns TRUE or FALSE. Only if the condition is evaluated as TRUE, the stage is run and shown to the players specified in the player field. If the condition field is left empty, it is set to TRUE by default.<br>The condition can depend on previously determined actions, moves of nature or other variables. Like other formulas, a condition should only contain R functions that are vectorized (that is satisfied by most commonly used functions and operators).<h4>Condition with unevaluated variables</h4>A player may reach this stage, while a variable in the condition is not yet evaluated, because the variable is only computed once another player first finishes an earlier stage. Uninitialized variables get the value NA.<br>If the condition evaluates as NA, the player waits until the condition evaluates to TRUE or FALSE. Each time another player finishes a stage, the condition is checked again. <br><br>Note that logical condition may evaluate to TRUE or FALSE even if one variable has the value NA. For example, consider the condition 'x==1 | y==1' that uses the logical or operator '|'.  If y is equal to 1 and x is NA, the condition will still evaluate to TRUE. However, if y is eqal to 2 and x is NA the condition will evaluate to NA. Similarly, look at the condition 'x==1 & y==1' with a logical AND. If y is equal to 1 and x is NA, the condition will return NA. However, if y is eqal to 2 and x is NA the condition will evaluate to FALSE.<h4>Players getting stuck</h4>If may happen that you program your conditions in a wrong fashion that makes all players get stuck before a stage, because all conditions evaluate to NA due to non-initialized variables. If this happens, press on the 'Info' button when running the game. If a player is waiting, you will see additional information, why this player is waiting and which variables are not yet initialized.<br><br>It may be a good training, to build a simple centipede game. You can then look at the conditions in the sample centipede game provided with gtree that are designed in a way that avoids getting stuck without introducing unneccearry extra stages."
+      },
+      {
+        "name": "observe",
+        "type": "character",
+        "inputType": "textArea",
+        "multiple": true,
+        "onlyDefined": true,
+        "cases": true,
+        "help": "Enter here the names of all variables (actions, moves of nature, or computed variable) that the player observes in this stage. Write variables as a JSON array, e.g.<br><pre>[offer, punishment]</pre><br> The observed variables will be used to construct the approbriate information sets in the extensive form game representation.<br><br>Note that a player is always assumed to know all the parameters of the game and all actions she has played herself in an earlier stage. So you don't have to add such variables to the observe field."
+      },
+      {
+        "expanded": true,
+        "name": "nature",
+        "childType": "randomVar",
+        "isList": true,
+        "help": "Here you can specify a move by nature, i.e. a random variable. Click-right on this field to add a new move by nature in this stage. Note that gtree only allows random variables that take finitely many values to be able to construct a game tree."
+      },
+      {
+        "name": "compute",
+        "childType": "transformation",
+        "expanded": true,
+        "isList": true,
+        "help": "Click right to add a new computed variable. A computed variable or transformation is a deterministic function of previously generated variables (parameters, actions, move of nature or other computed variables). In principle, you can use any vectorized R function to create a transformation.<br><h4>Payoff</h4>A special transformation are payoff variables, like <pre>payoff_1</pre> for player 1. You should make sure that in every experimental run payoffs are computed for every player exactly once. Typically, you could compute payoffs for all players in a final result state.<br><h4>Case distinctions</h4>The function <pre>case_distinction</pre> contained in gtree may be helpful if you want to assign a variable based on a simple case distinction.<br> Your transformation should not call a random number generator. To create random variables, use a move of nature instead."
+      },
+      {
+        "name": "actions",
+        "expanded": true,
+        "childType": "action",
+        "isList": true,
+        "help": "Click right to add a new action. Actions can only be added to stages that specify a single player. The player will choose a value from the set associated with the action in this stage. You can add more than one action at a stage."
+      },
+      {
+        "name": "special",
+        "type": "stageSpecial"
+      },
+      {
+        "name": "waitForPlayers",
+        "type": "integer",
+        "help": "If you enter player numbers here, the experiment will explicitly wait until all entered players have arrived at this stage, before the experiment continues. You can also enter an R formula that returns the players. Usually, it will not neccessary to manually enter players here, since the experiment will also wait if not yet all variables are known to evaluate the condition or run the stage."
+      }
+    ]
+  },
+
+  "stageSpecial": {
+    "expanded": false,
+    "fields": [
+      {
+        "name": "Communication",
+        "type": "Communication",
+        "help": "Addins that allow free form communication between subjects. The communication cannot be analysed in a game theoretic fashion. For structured communication with a finite set of signals use actions instead, as this would allow game theoretic analysis."
+      },
+      {
+        "name": "Ask",
+        "type": "Ask",
+        "help": "Addins to ask subject about things, e.g. her beliefs, during a game. The results will not be considered relevant for the game."
+      },
+      {
+        "name": "Auction",
+        "type": "Auction",
+        "help": "Different forms of auctions that cannot be easily described with a finite number of rounds. E.g. open-ended English auctions or double auctions. Other auctions, like sealed bid auctions, should rather be described as a game using stages and actions, to allow game theoretic analysis."
+      },
+      {
+        "name": "RealEffort",
+        "type": "RealEffort",
+        "help": "Real effort games that can be implemented on the computer. For example, counting zeros."
+      },
+      {
+        "name": "Other",
+        "type": "Other"
+      }
+    ]
+  },
+
+  "Communication": {
+    "expanded": true,
+    "fields": []
+  },
+  "Ask": {
+    "expanded": true,
+    "fields": []
+  },
+  "Auction":  {
+    "expanded": true,
+    "fields": []
+  },
+  "RealEffort":  {
+    "expanded": true,
+    "fields": []
+  },
+  "Other": {
+    "expanded": true,
+    "fields": []
+  },
+  "gameInfo": {
+    "expanded": false,
+    "fields": [
+      {
+        "name": "label"
+      },
+      {
+        "name": "tags",
+        "setVar": "gameTags"
+      },
+      {
+        "name": "descr",
+        "inputType": "textArea"
+      },
+      {
+        "name": "articles"
+      },
+      {
+        "name": "variantOf"
+      }
+    ]
+  },
+  "gameTags": [
+    "ultimatum",
+    "intentions",
+    "public goods",
+    "punishment",
+    "dictator",
+    "gift exchange",
+    "prisoners dilemma"
+  ],
+  "action": {
+    "expanded": true,
+    "fields": [
+      {
+        "name": "name",
+        "type": "character"
+      },
+      {
+        "name": "set",
+        "type": "formula",
+        "inputType": "textArea",
+        "multiple": true
+      },
+      {
+        "name": "strategyMethodDomain",
+        "type": "formula",
+        "inputType": "textArea",
+        "multiple": true,
+        "help": "If empty, no strategy method is used. Otherwise state the actions (variable name) that consitute the domain for the strategy method. This means for each possible realization of the domain actions, an action must be chosen."
+      },
+      {
+        "name": "labels",
+        "type": "formula",
+        "help": "Optionally a vector of labels. One label for each element of the set of possible moves. Will be used as default in pages and may lead to more informative data."
+      }
+    ]
+  },
+  "belief": {
+    "fields": [
+      {
+        "name": "name"
+      },
+      {
+        "name": "refVar",
+        "type": "variable",
+        "help": "Belief about which variable?"
+      }
+    ]
+  },
+  "randomVar": {
+    "fields": [
+      {
+        "name": "name"
+      },
+      {
+        "name": "set",
+        "type": "formula",
+        "inputType": "textArea",
+        "multiple": true,
+        "help": "possible realizations of the variable"
+      },
+      {
+        "name": "probs:",
+        "type": "numeric",
+        "inputType": "textArea",
+        "multiple": true,
+        "help": "Probability for each realization. If empty all realizations are equally likely."
+      }
+    ]
+  },
+  "transformation": {
+    "fields": [
+      {
+        "name": "name"
+      },
+      {
+        "name": "formula",
+        "type": "formula",
+        "inputType": "textArea",
+        "cases": true
+      }
+    ]
+  },
+  "actionForms": {
+
+  },
+
+  "actionForm": {
+    "expanded": false,
+    "fields": [
+      {
+        "name": "inputText",
+        "type": "character",
+        "inputType": "textArea"
+      },
+      {
+        "name": "labels",
+        "type": "formula",
+        "inputType": "textArea",
+        "multiple": true
+      }
+    ]
+  },
+  "varpar": {
+    "help": "In this table, you can specify different parameters (columns) and different variants of the games (row). To add or remove a column or row right-click on the table.<br>The first variant is the baseline variant. you must specify all parameters in the baseline variant. In further variants, you can leave some parameters empty. Then the values of the baseline variant will be taken. This means you only need to specify differences to the baseline variant."
+  },
+  "varparTable": {
+    "help_type": "varpar"
+  }
+
+}
